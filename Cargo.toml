@@ -1,0 +1,9 @@
+[package]
+name = "jbls"
+version = "0.1.0"
+authors = ["fuyumi <280604399@qq.com>"]
+
+[dependencies]
+futures = '*'
+hyper = '*'
+ring = '*'
