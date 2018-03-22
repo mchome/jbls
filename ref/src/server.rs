@@ -4,6 +4,8 @@ use futures::future::ok;
 use hyper::{StatusCode, Error};
 use hyper::server::{Http, Request, Response, Service};
 
+use core::obtain_ticket;
+
 struct Server;
 
 impl Service for Server {
@@ -38,6 +40,7 @@ impl Service for Server {
 }
 
 pub fn start_server() {
+    obtain_ticket("D:/General Project/jbls/tests/test.der");
     let addr = "127.0.0.1:3000".parse().unwrap();
     let server = Http::new().bind(&addr, || Ok(Server)).unwrap();
     println!("Starting server!");

@@ -6,4 +6,5 @@ authors = ["fuyumi <280604399@qq.com>"]
 [dependencies]
 futures = '*'
 hyper = '*'
-ring = '*'
+ring = { version = '*', features = ['rsa_signing'] }
+untrusted = '*'
