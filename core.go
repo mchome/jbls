@@ -13,19 +13,7 @@ import (
 	"os"
 )
 
-func obtainTicket(message string, filepath string) string {
-	file, _ := os.Open(filepath)
-	keydata, _ := ioutil.ReadAll(file)
-	file.Close()
-	signature, err := sign(message, keydata)
-	if err != nil {
-		log.Print(err)
-		signature = ""
-	}
-	return signature
-}
-
-func sign(message string, key []byte) (string, error) {
+func sign(message string, key []byte) string {
 	block, _ := pem.Decode([]byte(key))
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	hash := md5.New()
@@ -33,13 +21,14 @@ func sign(message string, key []byte) (string, error) {
 	digest := hash.Sum(nil)
 	sign, err := rsa.SignPKCS1v15(rand.Reader, priv, crypto.MD5, digest)
 	if err != nil {
-		return "", err
+		log.Print(err)
+		return ""
 	}
 	signature := hex.EncodeToString(sign)
-	return signature, nil
+	return signature
 }
 
-func isKey(filepath string) bool {
+func validateKey(filepath string) (bool, []byte) {
 	file, _ := os.Open(filepath)
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -49,13 +38,13 @@ func isKey(filepath string) bool {
 	block, _ := pem.Decode([]byte(data))
 	if block == nil {
 		log.Print("Failed to parse pem block.")
-		return false
+		return false, nil
 	}
 	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if priv == nil {
 		log.Print("Failed to parse PKCS1 private key.")
-		return false
+		return false, nil
 	}
 
-	return true
+	return true, data
 }
