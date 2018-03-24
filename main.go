@@ -1,21 +1,24 @@
-package jbls
+package main
 
 import (
-	"log"
 	"flag"
+	"log"
 	"os"
 )
 
 func main() {
-	ip := flag.String("ip", "0.0.0.0", "Bind your ip address.")
-	port := flag.String("port", "8000", "Bind your port.")
+	// host := flag.String("host", "127.0.0.1", "Bind your ip address.")
+	host := flag.String("host", "0.0.0.0", "Bind your ip address.")
+	port := flag.String("port", "8080", "Bind your port.")
 	keyPath := flag.String("key", "", "Private key for the license server.")
+	// name := flag.String("name", "", "Give a fixed name to user.")
 	flag.Parse()
 
-	log.Println("Bind ip address to: " + *ip)
-	log.Println("Bind port to: " + *port)
+	log.Printf("Bind to: %s:%s.", *host, *port)
 	if _, err := os.Stat(*keyPath); os.IsNotExist(err) {
-		log.Printf("Key file(%s) is not exist.", *keyPath)
-		return
+		log.Fatalf("Private Key file(%s) is not exist!", *keyPath)
+	} else if !isKey(*keyPath) {
+		log.Fatal("Error private key!")
 	}
+	server(*host, *port, *keyPath)
 }
