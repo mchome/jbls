@@ -5,7 +5,13 @@ A simple jb license server.
 ## Build
 
 ```bash
+# normal build
 go build -ldflags "-s -w"
+```
+
+```bash
+# build for mips (golang 1.10 or greater)
+GOOS=linux GOARCH=mips GOMIPS=softfloat go build -ldflags "-s -w"
 ```
 
 ## Usage
